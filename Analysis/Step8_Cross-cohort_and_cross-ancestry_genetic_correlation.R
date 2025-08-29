@@ -194,7 +194,10 @@ saveRDS(EAS_factor,file = "commonfactor_eas.rds.gz")
 A<-readRDS("commonfactor_eas.rds.gz")
 A<-subset(A, A$MAF >= .1)
 A<-subset(A, A$Q_pval >= 5e-8)
-N_hat_F2<-mean(1/((2*A$MAF*(1-A$MAF))*A$se_c^2))
+A$MAF <- as.numeric(as.character(A$MAF))
+B<-subset(A, A$MAF <= 0.4 & A$MAF >= 0.1)
+N_hat<-mean(1/((2*B$MAF*(1-B$MAF))*B$SE^2))
+N_hat
 A$N<-1/((2*A$MAF*(1-A$MAF))*A$se_c^2)
 A <- dplyr::select(A, c("SNP","CHR","BP","A1","A2","est","se_c","Pval_Estimate","MAF","N"))
 colnames(A)<-c("SNP","CHR","POS","effect_allele","other_allele","BETA","SE","P","FRQ","N")
@@ -213,3 +216,4 @@ popcorn fit -v 1 --cfile EUR_EAS_all_gen_imp.cscore --use_mle --sfile1 /mnt/d/pa
 popcorn fit -v 1 --cfile EUR_EAS_all_gen_imp.cscore --use_mle --sfile1 /mnt/d/pan_cancer/F3.sumstats.gz --sfile2 /mnt/d/pan_cancer/common_factor_EAS.sumstats.gz F3_EUR_EAS.txt
 popcorn fit -v 1 --cfile EUR_EAS_all_gen_imp.cscore --use_mle --sfile1 /mnt/d/pan_cancer/CF.sumstats.gz --sfile2 /mnt/d/pan_cancer/common_factor_EAS.sumstats.gz common_factor_EUR_EAS.txt
 popcorn fit -v 1 --cfile EUR_EAS_all_gen_imp.cscore --use_mle --sfile1 /mnt/d/pan_cancer/EF.sumstats.gz --sfile2 /mnt/d/pan_cancer/common_factor_EAS.sumstats.gz e_factor_EUR_EAS.txt
+
