@@ -218,3 +218,4 @@ popcorn fit -v 1 --cfile EUR_EAS_all_gen_imp.cscore --use_mle --sfile1 /mnt/d/pa
 popcorn fit -v 1 --cfile EUR_EAS_all_gen_imp.cscore --use_mle --sfile1 /mnt/d/pan_cancer/EF.sumstats.gz --sfile2 /mnt/d/pan_cancer/common_factor_EAS.sumstats.gz e_factor_EUR_EAS.txt
 
 
+
