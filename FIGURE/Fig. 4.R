@@ -1,3 +1,4 @@
+######Manhattan-------
 library(topr)
 setwd("D:/pan_cancer")
 pacman::p_load("vroom","data.table","readr","tidyr","dplyr","devtools","ggplot2","tidyverse","GWAS.utils","Seurat")
@@ -241,4 +242,70 @@ manhattan(list(df, lead_snps),
           verbose=F,
           title="") 
 dev.off()
+######UMAP------
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+from sklearn.neighbors import KernelDensity
+import scanpy as sc
+import os
 
+output_dir = "umap_plots"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+traits = ['F1_GWAS', 'F2_GWAS', 'F3_GWAS', 'CF_GWAS', 'EF_GWAS']
+
+for trait in traits:
+    fig, ax = plt.subplots(figsize=(6, 6))
+    
+    sc.pl.umap(
+        adata,
+        color=trait,
+        color_map="RdBu_r",
+        vmin=-5,
+        vmax=5,
+        s=20,
+        ax=ax,
+        show=False,
+        frameon=False
+    )
+    
+    mask = adata.obs['curated_anno'].isin(['Malignant', 'Epithelial'])
+    
+    if mask.sum() > 10:
+        x = adata.obsm["X_umap"][mask, 0]
+        y = adata.obsm["X_umap"][mask, 1]
+        
+        x_min, x_max = x.min() - 1.0, x.max() + 1.0
+        y_min, y_max = y.min() - 1.0, y.max() + 1.0
+        xx, yy = np.mgrid[x_min:x_max:100j, y_min:y_max:100j]
+        
+        xy_train = np.vstack([x, y]).T
+        xy_test = np.vstack([xx.ravel(), yy.ravel()]).T
+        
+        kde = KernelDensity(bandwidth=0.5, metric='euclidean')
+        kde.fit(xy_train)
+        
+        Z = np.exp(kde.score_samples(xy_test))
+        Z = Z.reshape(xx.shape)
+        
+        ax.contour(
+            xx, yy, Z,
+            levels=[Z.max() * 0.05],
+            colors='#ea3433',
+            linestyles='-',
+            linewidths=3.0,
+            alpha=0.9
+        )
+    
+    from matplotlib.lines import Line2D
+    legend_elements = [Line2D([0], [0], color='#ea3433', lw=3, label='Epithelial (Malignant and Normal)')]
+    ax.legend(handles=legend_elements, loc='lower left', bbox_to_anchor=(0.0, -0.05), frameon=False, fontsize=14)
+    
+    plt.tight_layout()
+    
+    plt.savefig(f"{output_dir}/{trait}_umap.pdf", format='pdf', bbox_inches='tight')
+    plt.close()
+
+print(f"Finish")
