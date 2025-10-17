@@ -241,3 +241,146 @@ ldsc.covstruct <- ldsc(traits =c("CF.sumstats.gz","EF.sumstats.gz","F1.sumstats.
                        population.prev = c(NA,NA,NA,NA,NA),
                        ld = "./eur_w_ld_chr/",wld = "./eur_w_ld_chr/",
                        trait.names=c("CF","EF","F1","F2","F3"))
+###mtag-----
+conda deactivate
+conda remove -n mtag --all
+conda create -n mtag python=2.7
+conda activate mtag
+conda install -c conda-forge numpy=1.15 scipy=1.2 pandas=0.24 joblib=0.13 bitarray=0.8
+mamba create -n mtag -c conda-forge python=2.7 numpy=1.15.4 scipy=1.2.1 pandas=0.24.2 joblib=0.13.2 bitarray=0.8.3 pip -y
+
+/home/huang/miniforge3/envs/mtag
+cd /mnt/g/linux/mtag
+conda activate mtag
+python2.7 ./mtag.py  \
+  --sumstats ./RCC_GCST90320057.txt,./THCA_GCST90399736.txt \
+  --out ./mtag_maxFDR_RCC_THCA \
+  --n_min 0.0 \
+  --fdr \
+  --stream_stdout
+  
+
+python2.7 ./mtag.py  \
+  --sumstats ./BRCA_GCST010098.txt,./ENDO_GCST006464.txt,./OVCA_GCST004462.txt \
+  --out ./mtag_maxFDR_BRCA_ENDO_OVCA \
+  --n_min 0.0 \
+  --fdr \
+  --stream_stdout
+  
+python2.7 ./mtag.py  \
+  --sumstats ./LUNG_GCST004748.txt,./CRC_GCST90255675.txt,./ESC_GCST003739.txt \
+  --out ./mtag_maxFDR_LUNG_CRC_ESC \
+  --n_min 0.0 \
+  --fdr \
+ --stream_stdout
+
+
+
+python2.7 ./mtag.py  \
+--sumstats ./RCC_GCST90320057.txt \
+--out ./mtag_maxFDR_RCC \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./THCA_GCST90399736.txt \
+--out ./mtag_maxFDR_THCA \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+
+python2.7 ./mtag.py  \
+--sumstats ./BRCA_GCST010098.txt \
+--out ./mtag_maxFDR_BRCA \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./ENDO_GCST006464.txt \
+--out ./mtag_maxFDR_ENDO \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./OVCA_GCST004462.txt \
+--out ./mtag_maxFDR_OVCA \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+
+python2.7 ./mtag.py  \
+--sumstats ./LUNG_GCST004748.txt \
+--out ./mtag_maxFDR_LUNG \
+--n_min 0.0 \
+--fdr \
+--std_betas \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./CRC_GCST90255675.txt \
+--out ./mtag_maxFDR_CRC \
+--n_min 0 \
+--std_betas 
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./ESC_GCST003739.txt \
+--out ./mtag_maxFDR_ESC \
+--n_min 0.0 \
+--fdr \
+--std_betas \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./mtag_MVP_KIDNEY.txt.gz,./mtag_MVP_THCA.txt.gz \
+--out ./mtag_MVP_maxFDR_RCC_THCA \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+--sumstats ./mtag_MVP_LUNG.txt.gz,./mtag_MVP_CRC.txt.gz,./mtag_MVP_ESC.txt.gz \
+--out ./mtag_MVP_maxFDR_LUNG_CRC_ESC \
+--n_min 0.0 \
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py  \
+  --sumstats ./mtag_UKB_FIN_BRCA.txt.gz,./mtag_UKB_FIN_ENDO.txt.gz,./mtag_UKB_FIN_OVCA.txt.gz \
+  --out ./mtag_UKB_FIN_maxFDR_BRCA_ENDO_OVCA \
+  --n_min 0.0 \
+--fdr \
+--stream_stdout
+
+python2.7 ./mtag.py \
+--sumstats ./mtag_UKB_FIN_BRCA.txt.gz,./mtag_UKB_FIN_ENDO.txt.gz,./mtag_UKB_FIN_OVCA.txt.gz \
+--out ./mtag_UKB_FIN_maxFDR_BRCA_ENDO_OVCA \
+--n_min 0.0 --fdr --stream_stdout \
+--signed-sumstats Z,0 \
+--z_name Z --snp_name SNP --a1_name A1 --a2_name A2 --n_name N
+
+
+files<-c("mtag_maxFDR_ESC.txt","mtag_maxFDR_CRC.txt","mtag_maxFDR_LUNG.txt","mtag_maxFDR_OVCA.txt",
+         "mtag_maxFDR_ENDO.txt","mtag_maxFDR_BRCA.txt","mtag_maxFDR_THCA.txt","mtag_maxFDR_RCC.txt")
+hm3<-"eur_w_ld_chr/w_hm3.snplist"
+trait.names<-c("mtag_ESC","mtag_CRC","mtag_LUNG","mtag_OVCA","mtag_ENDO","mtag_BRCA","mtag_THCA","mtag_RCC")
+N=c(NA,NA,NA,NA,NA,NA,NA,NA)
+info.filter=0.9
+maf.filter=0.01
+munge(files=files,hm3=hm3,trait.names=trait.names,N=N,info.filter=info.filter,maf.filter=maf.filter)
+
+gc()
+
+ldsc.covstruct <- ldsc(traits = c("mtag_LUNG.sumstats.gz", "mtag_BRCA.sumstats.gz", "mtag_ESC.sumstats.gz", "mtag_ENDO.sumstats.gz", "mtag_OVCA.sumstats.gz", "mtag_RCC.sumstats.gz", "mtag_CRC.sumstats.gz", "mtag_THCA.sumstats.gz"),
+                       sample.prev = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+                       population.prev = c(0.059, 0.137, 0.006, 0.03, 0.011, 0.018, 0.039, 0.012),
+                       ld = "./eur_w_ld_chr/",
+                       wld = "./eur_w_ld_chr/",
+                       trait.names = c("LC", "BRCA", "ESCA", "EC", "OC", "RCC", "CRC", "THCA")) # Corrected this line
+
