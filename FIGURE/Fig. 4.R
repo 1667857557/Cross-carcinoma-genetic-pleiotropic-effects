@@ -1,10 +1,10 @@
 ######Manhattan-------
 library(topr)
-setwd("D:/pan_cancer")
+setwd("G:/pan_cancer")
 pacman::p_load("vroom","data.table","readr","tidyr","dplyr","devtools","ggplot2","tidyverse","GWAS.utils","Seurat")
 tempdir()
 tempfile()
-tempdir <- function() "G:\\rtemp"
+tempdir <- function() "D:\\rtemp"
 unlockBinding("tempdir", baseenv())
 utils::assignInNamespace("tempdir", tempdir, ns="base", envir=baseenv())
 assign("tempdir", tempdir, baseenv())
@@ -38,8 +38,8 @@ F3$P[F3$P < 2.2e-308] <- 1e-300
 
 
 gc()
-# pdf('common_factor.pdf', width = 10, height = 3.5,compress = TRUE)
-png("common_factor.png", width = 10, height = 3.5, units = "in", res = 600, bg = "white")
+pdf('common_factor.pdf', width = 10, height = 3.5,compress = TRUE)
+# png("common_factor.png", width = 10, height = 3.5, units = "in", res = 600, bg = "white")
 lead_snps <- get_lead_snps(common_factor)
 manhattan(list(common_factor, lead_snps), 
           annotate=c(5e-100, 1e-8), 
@@ -61,9 +61,9 @@ manhattan(list(common_factor, lead_snps),
           verbose=F,
           title="") 
 dev.off()
-# pdf('e_factor.pdf', width = 10, height = 3,compress = TRUE)
+pdf('e_factor.pdf', width = 10, height = 3,compress = TRUE)
 
-png("e_factor.png", width = 10, height = 3, units = "in", res = 600, bg = "white")
+# png("e_factor.png", width = 10, height = 3, units = "in", res = 600, bg = "white")
 lead_snps <- get_lead_snps(e_factor)
 manhattan(list(e_factor, lead_snps), 
           annotate=c(5e-100, 5e-10), 
@@ -113,9 +113,9 @@ df$P_adjusted <- 10^(-df$logP_adjusted)
 df<-select(df,c("CHROM","POS","ID","REF","ALT","P_adjusted","BETA"))
 colnames(df)<-c("CHROM","POS","ID","REF","ALT","P","BETA")
 print("调整后的最终数据框:")
-png("F1.png", width = 10, height = 4.5, units = "in", res = 600, bg = "white")
+# png("F1.png", width = 10, height = 4.5, units = "in", res = 600, bg = "white")
 
-# pdf('F1.pdf', width = 10, height = 5,compress = TRUE)
+pdf('F1.pdf', width = 10, height = 5,compress = TRUE)
 lead_snps <- get_lead_snps(df)
 manhattan(list(df, lead_snps), 
           annotate=c(5e-100, 5e-10), 
@@ -165,8 +165,8 @@ df$P_adjusted <- 10^(-df$logP_adjusted)
 df<-select(df,c("CHROM","POS","ID","REF","ALT","P_adjusted","BETA"))
 colnames(df)<-c("CHROM","POS","ID","REF","ALT","P","BETA")
 print("调整后的最终数据框:")
-# pdf('F2.pdf', width = 10, height = 3.5,compress = TRUE)
-png("F2.png", width = 10, height = 4.5, units = "in", res = 600, bg = "white")
+pdf('F2.pdf', width = 10, height = 3.5,compress = TRUE)
+# png("F2.png", width = 10, height = 4.5, units = "in", res = 600, bg = "white")
 
 lead_snps <- get_lead_snps(df)
 manhattan(list(df, lead_snps), 
@@ -218,9 +218,9 @@ df$P_adjusted <- 10^(-df$logP_adjusted)
 df<-select(df,c("CHROM","POS","ID","REF","ALT","P_adjusted","BETA"))
 colnames(df)<-c("CHROM","POS","ID","REF","ALT","P","BETA")
 print("调整后的最终数据框:")
-png("F3.png", width = 10, height = 4.5, units = "in", res = 600, bg = "white")
+# png("F3.png", width = 10, height = 4.5, units = "in", res = 600, bg = "white")
 
-# pdf('F3.pdf', width = 10, height = 4.5,compress = TRUE)
+pdf('F3.pdf', width = 10, height = 4.5,compress = TRUE)
 lead_snps <- get_lead_snps(df)
 manhattan(list(df, lead_snps), 
           annotate=c(5e-100, 5e-10), 
