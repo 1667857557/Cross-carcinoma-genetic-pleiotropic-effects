@@ -1,3 +1,4 @@
+########
 library(data.table)
 library(dplyr)
 library(circlize)
@@ -78,3 +79,45 @@ circos.track(track.index = get.current.track.index(),
 circos.clear()
 dev.off()
 }
+#######
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+dt <- read_excel("metascape_result.xlsx", sheet = "Enrichment")
+
+dt <- dt %>%
+  filter(Category == "GO Biological Processes") %>%
+  distinct(Term, .keep_all = TRUE) %>%
+  arrange(`Log(q-value)`) %>%
+  slice_head(n = 5) %>%
+  mutate(
+    score = -`Log(q-value)`,
+    Description = factor(Description, levels = rev(Description))
+  )
+
+p <- ggplot(dt, aes(x = score, y = Description, fill = score)) +
+  geom_col(width = 0.7, alpha = 0.8) +
+  scale_fill_gradientn(
+    colours = c("#4575b4", "#abd9e9", "#e0f3f8",
+                "#ffffbf", "#fdae61", "#d73027", "#800026")
+  ) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.06))) +
+  geom_text(aes(x = 0.05, label = Description),
+            size = 4.3, hjust = 0) +
+  labs(x = expression(-Log[10]~"(adjusted P-value)"),
+       y = NULL, title = "GO Biological Process enrichment") +
+  theme_classic() +
+  theme(
+    axis.title = element_text(size = 13),
+    axis.text = element_text(size = 11),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(size = 13, hjust = 0.5, face = "bold"),
+    plot.margin = margin(5.5, 10, 5.5, 5.5),
+    legend.position = "none"
+  )
+
+print(p)
+#ggsave("GO_BP_top5.png", p, width = 9, height = 4.5, dpi = 300)
+ggsave("GO_BP_top5.pdf", p, width = 9, height = 4.5)
